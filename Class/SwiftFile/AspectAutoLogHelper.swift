@@ -16,7 +16,6 @@ public class AspectAutoLogHelper: NSObject {
     private var logger: AALAspectAutoLogProtocol.Type? {
         AALAspectAutoFrogExecutor.self
     }
-    private var appearingVCArray: [ViewControllerWeakContainer] = []
 
     private override init() {
         super.init()
@@ -33,6 +32,8 @@ public class AspectAutoLogHelper: NSObject {
     }
 
     // MARK: - UIViewController
+
+    private var appearingVCArray: [ViewControllerWeakContainer] = []
 
     public func after_viewControllerDidInit(_ viewController: Any?) {
         guard let viewController = viewController as? UIViewController else { return }
@@ -51,17 +52,45 @@ public class AspectAutoLogHelper: NSObject {
 
     // MARK: - UIControl
 
+    private var aliveControlArray: [UIControlWeakContainer] = []
+
     public func after_viewDidInit(_ view: Any?) {
+        aliveControlArray.removeAll(where: { $0.control == nil })
         guard let view = view as? UIView else { return }
         if let control = view as? UIControl {
-            control.addTarget(self, action: #selector(handleUIControlTouchUpInside), for: .touchUpInside)
+            aliveControlArray.append(.init(control: control))
         }
     }
 
-    @objc
-    private func handleUIControlTouchUpInside(_ control: UIControl?) {
-        guard let control = control else { return }
-        logger?.logUIControlTouchUp?(inside: control)
+    public func after_control(_ control: UIControl,
+                              didAddTarget target: Any?,
+                              action: Selector?,
+                              forEvent event: UIControl.Event) {
+        if event == .touchUpInside {
+            aliveControlArray
+                .first(where: { $0.control == control })?
+                .touchUpInside = .init(target: target as? NSObject, action: action)
+        }
+    }
+
+    public func after_control(_ control: UIControl,
+                              didRemoveTarget target: Any?,
+                              action: Selector?,
+                              forEvent event: UIControl.Event) {
+        if event == .touchUpInside {
+            aliveControlArray.first(where: { $0.control == control })?.touchUpInside = nil
+        }
+    }
+
+    public func after_control(_ control: UIControl,
+                              didSendAction action: Selector?,
+                              toTarget target: Any?,
+                              forEvent event: UIEvent?) {
+        if aliveControlArray.contains(where: {
+            $0.control == control && $0.isTouchUpInside(target: target, action: action)
+        }) {
+            logger?.logUIControlTouchUp?(inside: control)
+        }
     }
 
     // MARK: - app enter foreground
