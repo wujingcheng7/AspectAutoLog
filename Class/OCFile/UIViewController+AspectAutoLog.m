@@ -20,6 +20,8 @@
                                    swizzled:@selector(initWithAalCoder:)];
         [self aal_methodSwizzleWithOriginal:@selector(viewDidAppear:)
                                    swizzled:@selector(aal_viewDidAppear:)];
+        [self aal_methodSwizzleWithOriginal:@selector(viewDidDisappear:)
+                                   swizzled:@selector(aal_viewDidDisappear:)];
     });
 }
 
@@ -38,6 +40,11 @@
 - (void)aal_viewDidAppear:(BOOL)animated {
     [self aal_viewDidAppear:animated];
     [AALAspectAutologHelper.shared after_viewControllerViewDidAppear:self animated:animated];
+}
+
+- (void)aal_viewDidDisappear:(BOOL)animated {
+    [self aal_viewDidDisappear:animated];
+    [AALAspectAutologHelper.shared after_viewControllerViewDidDisappear:self animated:animated];
 }
 
 @end

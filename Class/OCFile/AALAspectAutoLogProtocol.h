@@ -17,6 +17,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// UIViewController did call "-viewDidAppear"
 + (void)logUIViewControllerAppear:(UIViewController *)viewController;
 
+/// UIViewController is still appearing when app enter foreground
++ (void)logUIViewControllerAppearingWhenAppEnterForeground:(UIViewController *)viewController;
+
 /// UIControl did "touchUpInside"
 + (void)logUIControlTouchUpInside:(UIControl *)control;
 

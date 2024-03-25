@@ -13,12 +13,23 @@ public class AspectAutoLogHelper: NSObject {
 
     public static let shared = AspectAutoLogHelper()
 
-    var logger: AALAspectAutoLogProtocol.Type? {
+    private var logger: AALAspectAutoLogProtocol.Type? {
         AALAspectAutoFrogExecutor.self
     }
+    private var appearingVCArray: [ViewControllerWeakContainer] = []
 
     private override init() {
         super.init()
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleAppWillEnterForeground),
+            name: UIApplication.willEnterForegroundNotification,
+            object: nil
+        )
+    }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
 
     // MARK: - UIViewController
@@ -29,6 +40,13 @@ public class AspectAutoLogHelper: NSObject {
 
     public func after_viewControllerViewDidAppear(_ viewController: UIViewController, animated: Bool) {
         logger?.logUIViewControllerAppear?(viewController)
+        if !appearingVCArray.contains(where: { $0.weakVC == viewController }) {
+            appearingVCArray.append(viewController.weakContainer())
+        }
+    }
+
+    public func after_viewControllerViewDidDisappear(_ viewController: UIViewController, animated: Bool) {
+        appearingVCArray.removeAll(where: { $0.weakVC == viewController })
     }
 
     // MARK: - UIControl
@@ -44,6 +62,16 @@ public class AspectAutoLogHelper: NSObject {
     private func handleUIControlTouchUpInside(_ control: UIControl?) {
         guard let control = control else { return }
         logger?.logUIControlTouchUp?(inside: control)
+    }
+
+    // MARK: - app enter foreground
+
+    @objc
+    private func handleAppWillEnterForeground() {
+        appearingVCArray.removeAll(where: { $0.isEmpty() })
+        appearingVCArray.compactMap({ $0.weakVC }).forEach { viewController in
+            logger?.logUIViewControllerAppearing?(whenAppEnterForeground: viewController)
+        }
     }
 
 }
