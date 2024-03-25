@@ -89,7 +89,10 @@ public class AspectAutoLogHelper: NSObject {
         if aliveControlArray.contains(where: {
             $0.control == control && $0.isTouchUpInside(target: target, action: action)
         }) {
-            logger?.logUIControlTouchUp?(inside: control)
+            logger?.logUIControlTouchUp?(
+                inside: control,
+                firstViewController: control.findFirstViewController()
+            )
         }
     }
 

@@ -21,7 +21,8 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)logUIViewControllerAppearingWhenAppEnterForeground:(UIViewController *)viewController;
 
 /// UIControl did "touchUpInside"
-+ (void)logUIControlTouchUpInside:(UIControl *)control;
++ (void)logUIControlTouchUpInside:(UIControl *)control
+              firstViewController:(nullable UIViewController *)viewController;
 
 @end
 
