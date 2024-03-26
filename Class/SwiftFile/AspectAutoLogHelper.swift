@@ -42,6 +42,7 @@ public class AspectAutoLogHelper: NSObject {
     }
 
     public func after_viewControllerViewDidAppear(_ viewController: UIViewController, animated: Bool) {
+        viewController.aal.pageNode.dateWhenViewDidAppear = Date()
         logger?.logUIViewControllerAppear?(viewController)
         if !appearingVCArray.contains(where: { $0.weakVC == viewController }) {
             appearingVCArray.append(viewController.weakContainer())
@@ -49,6 +50,8 @@ public class AspectAutoLogHelper: NSObject {
     }
 
     public func after_viewControllerViewDidDisappear(_ viewController: UIViewController, animated: Bool) {
+        viewController.aal.pageNode.dateWhenViewDidDisAppear = Date()
+        logger?.logUIViewControllerDisAppear?(viewController)
         appearingVCArray.removeAll(where: { $0.weakVC == viewController })
     }
 
