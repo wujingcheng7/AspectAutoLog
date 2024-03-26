@@ -15,14 +15,6 @@ public class PageNode: NSObject {
 
     public var name: String = ""
     public var prevNode: PageNode?
-    public var extraDict: [String: Any] = [:]
-
-    public internal(set) var dateWhenViewDidAppear: Date?
-    public internal(set) var dateWhenViewDidDisAppear: Date?
-    public var appearDurationWhenDisappear: TimeInterval {
-        guard let disappear = dateWhenViewDidDisAppear, let appear = dateWhenViewDidAppear else { return 0 }
-        return max(disappear.timeIntervalSince(appear), 0)
-    }
 
     public init(name: String? = "", prevNode: PageNode? = nil) {
         self.name = name ?? ""
@@ -48,10 +40,30 @@ public class PageNode: NSObject {
 @objc
 public extension UIViewController {
 
-    @objc
     @available(*, renamed: "aal.pageName")
     var aal_pageNode: PageNode {
         aal.pageNode
+    }
+
+    @available(*, renamed: "aal.extraDict")
+    var aal_extraDict: [String: Any] {
+        get { aal.extraDict }
+        set { aal.extraDict = newValue }
+    }
+
+    @available(*, renamed: "aal.dateWhenViewDidAppear")
+    var aal_dateWhenViewDidAppear: Date? {
+        aal.dateWhenViewDidAppear
+    }
+
+    @available(*, renamed: "aal.dateWhenViewDidDisAppear")
+    var aal_dateWhenViewDidDisAppear: Date? {
+        aal.dateWhenViewDidDisAppear
+    }
+
+    @available(*, renamed: "aal.appearDurationWhenDisappear")
+    var aal_appearDurationWhenDisappear: TimeInterval {
+        aal.appearDurationWhenDisappear
     }
 
 }
@@ -68,6 +80,45 @@ public extension AspectAutoLogExtension where Base: UIViewController {
         return node
     }
 
+    var extraDict: [String: Any] {
+        get {
+            if let res = objc_getAssociatedObject(base, &type(of: base).AssociatedKeys.extraDict) as? [String: Any] {
+                return res
+            }
+            extraDict = [:]
+            return [:]
+        }
+        set {
+            objc_setAssociatedObject(base, &type(of: base).AssociatedKeys.extraDict,
+                                     newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+    }
+
+    public internal(set) var dateWhenViewDidAppear: Date? {
+        get {
+            objc_getAssociatedObject(base, &type(of: base).AssociatedKeys.dateWhenViewDidAppear) as? Date
+        }
+        set {
+            objc_setAssociatedObject(base, &type(of: base).AssociatedKeys.dateWhenViewDidAppear,
+                                     newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+    }
+
+    public internal(set) var dateWhenViewDidDisAppear: Date? {
+        get {
+            objc_getAssociatedObject(base, &type(of: base).AssociatedKeys.dateWhenViewDidDisappear) as? Date
+        }
+        set {
+            objc_setAssociatedObject(base, &type(of: base).AssociatedKeys.dateWhenViewDidDisappear,
+                                     newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+    }
+
+    public var appearDurationWhenDisappear: TimeInterval {
+        guard let disappear = dateWhenViewDidDisAppear, let appear = dateWhenViewDidAppear else { return 0 }
+        return max(disappear.timeIntervalSince(appear), 0)
+    }
+
 }
 
 fileprivate extension UIViewController {
@@ -75,6 +126,9 @@ fileprivate extension UIViewController {
     fileprivate struct AssociatedKeys {
 
         static var pageNode = UUID().uuidString
+        static var dateWhenViewDidAppear = UUID().uuidString
+        static var dateWhenViewDidDisappear = UUID().uuidString
+        static var extraDict = UUID().uuidString
 
     }
 
