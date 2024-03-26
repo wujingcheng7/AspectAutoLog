@@ -20,10 +20,10 @@ public extension UIView {
     }
 
     @objc
-    @available(*, renamed: "aal.extraDict")
-    var aal_extraDict: [String: Any] {
-        get { aal.extraDict }
-        set { aal.name }
+    @available(*, renamed: "aal.extraParams")
+    var aal_extraParams: [String: Any] {
+        get { aal.extraParams }
+        set { aal.extraParams = newValue }
     }
 
 }
@@ -40,16 +40,16 @@ public extension AspectAutoLogExtension where Base: UIView {
         }
     }
 
-    var extraDict: [String: Any] {
+    var extraParams: [String: Any] {
         get {
-            if let res = objc_getAssociatedObject(base, &type(of: base).AssociatedKeys.extraDict) as? [String: Any] {
+            if let res = objc_getAssociatedObject(base, &type(of: base).AssociatedKeys.extraParams) as? [String: Any] {
                 return res
             }
-            extraDict = [:]
+            extraParams = [:]
             return [:]
         }
         set {
-            objc_setAssociatedObject(base, &type(of: base).AssociatedKeys.extraDict,
+            objc_setAssociatedObject(base, &type(of: base).AssociatedKeys.extraParams,
                                      newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
@@ -61,7 +61,7 @@ fileprivate extension UIView {
     fileprivate struct AssociatedKeys {
 
         static var name = UUID().uuidString
-        static var extraDict = UUID().uuidString
+        static var extraParams = UUID().uuidString
 
     }
 

@@ -45,10 +45,10 @@ public extension UIViewController {
         aal.pageNode
     }
 
-    @available(*, renamed: "aal.extraDict")
-    var aal_extraDict: [String: Any] {
-        get { aal.extraDict }
-        set { aal.extraDict = newValue }
+    @available(*, renamed: "aal.extraParams")
+    var aal_extraParams: [String: Any] {
+        get { aal.extraParams }
+        set { aal.extraParams = newValue }
     }
 
     @available(*, renamed: "aal.dateWhenViewDidAppear")
@@ -80,16 +80,16 @@ public extension AspectAutoLogExtension where Base: UIViewController {
         return node
     }
 
-    var extraDict: [String: Any] {
+    var extraParams: [String: Any] {
         get {
-            if let res = objc_getAssociatedObject(base, &type(of: base).AssociatedKeys.extraDict) as? [String: Any] {
+            if let res = objc_getAssociatedObject(base, &type(of: base).AssociatedKeys.extraParams) as? [String: Any] {
                 return res
             }
-            extraDict = [:]
+            extraParams = [:]
             return [:]
         }
         set {
-            objc_setAssociatedObject(base, &type(of: base).AssociatedKeys.extraDict,
+            objc_setAssociatedObject(base, &type(of: base).AssociatedKeys.extraParams,
                                      newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
@@ -128,7 +128,7 @@ fileprivate extension UIViewController {
         static var pageNode = UUID().uuidString
         static var dateWhenViewDidAppear = UUID().uuidString
         static var dateWhenViewDidDisappear = UUID().uuidString
-        static var extraDict = UUID().uuidString
+        static var extraParams = UUID().uuidString
 
     }
 
