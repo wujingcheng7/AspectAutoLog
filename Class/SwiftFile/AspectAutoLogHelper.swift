@@ -9,6 +9,8 @@ import UIKit
 
 @objc(AALAspectAutologHelper)
 @objcMembers
+/// English: Please do not use this class directly. The reason this class is designed as public is solely to allow internal Objective-C files to access it.
+/// 中文: 请不要直接使用这个类，这个类之所以设计为 public，仅仅是为了能让内部的 OC 文件可以访问到
 public class AspectAutoLogHelper: NSObject {
 
     public static let shared = AspectAutoLogHelper()
