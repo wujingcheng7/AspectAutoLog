@@ -40,11 +40,11 @@
 }
 
 - (void)aal_sendAction:(SEL)action to:(id)target forEvent:(UIEvent *)event {
+    [AALAspectAutologHelper.shared before_control:self
+                                   willSendAction:action
+                                         toTarget:target
+                                         forEvent:event];
     [self aal_sendAction:action to:target forEvent:event];
-    [AALAspectAutologHelper.shared after_control:self
-                                   didSendAction:action
-                                        toTarget:target
-                                        forEvent:event];
 }
 
 @end

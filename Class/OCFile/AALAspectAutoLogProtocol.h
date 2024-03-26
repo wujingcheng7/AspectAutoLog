@@ -23,9 +23,10 @@ NS_ASSUME_NONNULL_BEGIN
 /// UIViewController did call "-viewDidDisAppear"
 + (void)logUIViewControllerDisAppear:(UIViewController *)viewController;
 
-/// UIControl did "touchUpInside"
-+ (void)logUIControlTouchUpInside:(UIControl *)control
-              firstViewController:(nullable UIViewController *)viewController;
+/// UIControl will execute "touchUpInside" action
++ (void)logUIControlWillTouchUpInside:(UIControl *)control
+                     inViewController:(nullable UIViewController *)viewController
+NS_SWIFT_NAME(logUIControlWillTouchUpInside(control:inViewController:));
 
 @end
 

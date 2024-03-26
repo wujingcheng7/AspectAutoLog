@@ -87,16 +87,16 @@ public class AspectAutoLogHelper: NSObject {
         }
     }
 
-    public func after_control(_ control: UIControl,
-                              didSendAction action: Selector?,
-                              toTarget target: Any?,
-                              forEvent event: UIEvent?) {
+    public func before_control(_ control: UIControl,
+                               willSendAction action: Selector?,
+                               toTarget target: Any?,
+                               forEvent event: UIEvent?) {
         if aliveControlArray.contains(where: {
             $0.control == control && $0.isTouchUpInside(target: target, action: action)
         }) {
-            logger?.logUIControlTouchUp?(
-                inside: control,
-                firstViewController: control.findFirstViewController()
+            logger?.logUIControlWillTouchUpInside?(
+                control: control,
+                inViewController: control.findFirstViewController()
             )
         }
     }
