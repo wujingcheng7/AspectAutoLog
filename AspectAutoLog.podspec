@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name          = "AspectAutoLog"
-  s.version       = "0.0.3"
+  s.version       = "1.0.0"
   s.summary       = "iOS auto log based on aop"
 
   s.description   = <<-DESC
