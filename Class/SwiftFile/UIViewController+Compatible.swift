@@ -21,8 +21,8 @@ public class PageNode: NSObject {
         self.prevNode = prevNode
     }
 
-    public func nodeChain() -> [PageNode] {
-        var chain = [self]
+    public func nodeChain(containSelf: Bool) -> [PageNode] {
+        var chain: [PageNode] = containSelf ? [self] : []
         var res = self.prevNode
         while res != nil {
             chain.insert(res!, at: 0)
@@ -31,8 +31,8 @@ public class PageNode: NSObject {
         return chain
     }
 
-    public func nodeChainString(joined separator: String? = "/") -> String {
-        nodeChain().map({ $0.name }).joined(separator: separator ?? "")
+    public func nodeChainString(containSelf: Bool, joined separator: String? = "/") -> String {
+        nodeChain(containSelf: containSelf).map({ $0.name }).joined(separator: separator ?? "")
     }
 
 }
@@ -40,7 +40,14 @@ public class PageNode: NSObject {
 @objc
 public extension UIViewController {
 
-    @available(*, renamed: "aal.pageName")
+    @IBInspectable
+    @available(*, renamed: "aal.pageNode.name")
+    var aal_pageNode_name: String {
+        get { aal.pageNode.name }
+        set { aal.pageNode.name = newValue }
+    }
+
+    @available(*, renamed: "aal.pageNode")
     var aal_pageNode: PageNode {
         aal.pageNode
     }

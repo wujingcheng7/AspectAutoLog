@@ -12,14 +12,13 @@ extension UIView: AspectAutoLogCompatible { }
 @objc
 public extension UIView {
 
-    @objc
+    @IBInspectable
     @available(*, renamed: "aal.name")
     var aal_name: String? {
         get { aal.name }
         set { aal.name = newValue }
     }
 
-    @objc
     @available(*, renamed: "aal.extraParams")
     var aal_extraParams: [String: Any] {
         get { aal.extraParams }
