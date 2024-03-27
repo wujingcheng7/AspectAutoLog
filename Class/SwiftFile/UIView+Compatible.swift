@@ -14,7 +14,7 @@ public extension UIView {
 
     @IBInspectable
     @available(*, renamed: "aal.name")
-    var aal_name: String? {
+    var aal_name: String {
         get { aal.name }
         set { aal.name = newValue }
     }
@@ -29,9 +29,13 @@ public extension UIView {
 
 public extension AspectAutoLogExtension where Base: UIView {
 
-    var name: String? {
+    var name: String {
         get {
-            objc_getAssociatedObject(base, &type(of: base).AssociatedKeys.name) as? String
+            if let res = objc_getAssociatedObject(base, &type(of: base).AssociatedKeys.name) as? String {
+                return res
+            }
+            name = ""
+            return ""
         }
         set {
             objc_setAssociatedObject(base, &type(of: base).AssociatedKeys.name,
