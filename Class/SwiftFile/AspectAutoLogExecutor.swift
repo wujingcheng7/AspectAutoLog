@@ -16,7 +16,7 @@ public class AspectAutoLogExecutor: NSObject {
     public static func register(logger: AspectAutoLogProtocol.Type) {
         if loggers.contains(where: { $0 == logger }) {
             #if DEBUG
-            assertionFailure("duplicate reigster")
+            assertionFailure("duplicate register")
             #endif
         } else {
             #if DEBUG
