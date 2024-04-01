@@ -31,10 +31,10 @@ pod 'AspectAutoLog'
 import AspectAutoLog
 // 如果你使用 Swift 语言
 @objcMembers
-public class YourCustom: NSObject, AALAspectAutoLogProtocol {
+public class YourCustom: NSObject, AspectAutoLogProtocol {
 
     public static func logUIViewControllerAppear(_ viewController: UIViewController) {
-        // 向您自己的服务器上报埋点，页面移除事件
+        // 向您自己的服务器上报埋点，页面展示事件
     }
 
     public static func logUIViewControllerAppearing(whenAppEnterForeground viewController: UIViewController) {
@@ -82,7 +82,7 @@ NS_ASSUME_NONNULL_END
 @implementation YourCustom
 
 + (void)logUIViewControllerAppear:(UIViewController *)viewController {
-    // 向您自己的服务器上报埋点，页面移除事件
+    // 向您自己的服务器上报埋点，页面展示事件
 }
 
 + (void)logUIViewControllerAppearingWhenAppEnterForeground:(UIViewController *)viewController {
@@ -123,11 +123,12 @@ NS_ASSUME_NONNULL_END
 @implementation NSObject (YourCustom)
 
 + (void)load {
-    AALAspectAutoFrogExecutor = [YourCustom class];
+    [AALAspectAutoLogExecutor registerWithLogger: [YourCustom class]];
 }
 
 @end
 ```
+
 ## 示例
 
 ```swift

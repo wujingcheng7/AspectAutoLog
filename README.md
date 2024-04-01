@@ -1,6 +1,7 @@
 # AspectAutoLog
 
-AspectAutoLog is a library for implementing automatic tracking in iOS projects, making tracking simpler and more efficient. This library supports page display tracking and button click tracking.
+AspectAutoLog is a library for implementing automatic tracking in iOS projects, making tracking simpler and more efficient.(aka "ios auto log", "ios auto tracking".
+) This library supports page display tracking and button click tracking.
 
 ### [中文介绍](README_CN.md)
 
@@ -33,10 +34,10 @@ pod 'AspectAutoLog'
 import AspectAutoLog
 
 @objcMembers
-public class YourCustom: NSObject, AALAspectAutoLogProtocol {
+public class YourCustom: NSObject, AspectAutoLogProtocol {
 
     public static func logUIViewControllerAppear(_ viewController: UIViewController) {
-        // Report tracking events to your server, page removal event
+        // Report tracking events to your server, page appear event
     }
 
     public static func logUIViewControllerAppearing(whenAppEnterForeground viewController: UIViewController) {
@@ -83,7 +84,7 @@ NS_ASSUME_NONNULL_END
 @implementation YourCustom
 
 + (void)logUIViewControllerAppear:(UIViewController *)viewController {
-    // Report tracking events to your server, page removal event
+    // Report tracking events to your server, page appear event
 }
 
 + (void)logUIViewControllerAppearingWhenAppEnterForeground:(UIViewController *)viewController {
@@ -124,7 +125,7 @@ NS_ASSUME_NONNULL_END
 @implementation NSObject (YourCustom)
 
 + (void)load {
-    AALAspectAutoFrogExecutor = [YourCustom class];
+    [AALAspectAutoLogExecutor registerWithLogger: [YourCustom class]];
 }
 
 @end
