@@ -16,11 +16,11 @@ public class AspectAutoLogExecutor: NSObject {
     public static func register(logger: AspectAutoLogProtocol.Type) {
         if loggers.contains(where: { $0 == logger }) {
             #if DEBUG
-            assertionFailure("duplicate register")
+            debugPrint("[AspectAutuLog] 😂duplicate register")
             #endif
         } else {
             #if DEBUG
-            debugPrint("[AspectAutuLog] register \(logger) success!")
+            debugPrint("[AspectAutuLog] ✅register \(logger) success!")
             #endif
             loggers.append(logger)
         }
