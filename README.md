@@ -167,6 +167,10 @@ class SomeViewController: UIViewController {
 }
 ```
 
+## TODO
+- Support the display of views
+- Support more interaction actions (not limited to touchUpInside)
+
 ## Contributing
 
 Contributions, issues, and feature requests are welcome.

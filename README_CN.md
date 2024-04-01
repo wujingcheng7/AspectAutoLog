@@ -165,6 +165,10 @@ class SomeViewController: UIViewController {
 }
 ```
 
+## TODO
+- 支持 View 的展示
+- 支持 更多的交互动作(不局限于 touchupInside)
+
 ## 贡献
 
 欢迎贡献代码，提出问题和建议。
