@@ -15,10 +15,6 @@ public class AspectAutoLogHelper: NSObject {
 
     public static let shared = AspectAutoLogHelper()
 
-    private var logger: AALAspectAutoLogProtocol.Type? {
-        AALAspectAutoFrogExecutor.self
-    }
-
     private override init() {
         super.init()
         NotificationCenter.default.addObserver(
@@ -43,7 +39,9 @@ public class AspectAutoLogHelper: NSObject {
 
     public func after_viewControllerViewDidAppear(_ viewController: UIViewController, animated: Bool) {
         viewController.aal.dateWhenViewDidAppear = Date()
-        logger?.logUIViewControllerAppear?(viewController)
+        loggersDo { logger in
+            logger.logUIViewControllerAppear?(viewController)
+        }
         if !appearingVCArray.contains(where: { $0.weakVC == viewController }) {
             appearingVCArray.append(viewController.weakContainer())
         }
@@ -51,7 +49,9 @@ public class AspectAutoLogHelper: NSObject {
 
     public func after_viewControllerViewDidDisappear(_ viewController: UIViewController, animated: Bool) {
         viewController.aal.dateWhenViewDidDisAppear = Date()
-        logger?.logUIViewControllerDisAppear?(viewController)
+        loggersDo { logger in
+            logger.logUIViewControllerDisAppear?(viewController)
+        }
         appearingVCArray.removeAll(where: { $0.weakVC == viewController })
     }
 
@@ -94,10 +94,12 @@ public class AspectAutoLogHelper: NSObject {
         if aliveControlArray.contains(where: {
             $0.control == control && $0.isTouchUpInside(target: target, action: action)
         }) {
-            logger?.logUIControlWillTouchUpInside?(
-                control: control,
-                inViewController: control.findFirstViewController()
-            )
+            loggersDo { logger in
+                logger.logUIControlWillTouchUpInside?(
+                    control: control,
+                    inViewController: control.findFirstViewController()
+                )
+            }
         }
     }
 
@@ -107,8 +109,16 @@ public class AspectAutoLogHelper: NSObject {
     private func handleAppWillEnterForeground() {
         appearingVCArray.removeAll(where: { $0.isEmpty() })
         appearingVCArray.compactMap({ $0.weakVC }).forEach { viewController in
-            logger?.logUIViewControllerAppearing?(whenAppEnterForeground: viewController)
+            loggersDo { logger in
+                logger.logUIViewControllerAppearing?(whenAppEnterForeground: viewController)
+            }
         }
+    }
+
+    // MARK: - call logger
+
+    private func loggersDo(block: (_ logger: AspectAutoLogProtocol.Type) -> Void) {
+        AspectAutoLogExecutor.loggers.forEach({ block($0) })
     }
 
 }
