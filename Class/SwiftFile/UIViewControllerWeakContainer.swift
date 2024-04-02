@@ -7,7 +7,7 @@
 
 import UIKit
 
-struct ViewControllerWeakContainer {
+struct UIViewControllerWeakContainer {
 
     weak var weakVC: UIViewController?
 
@@ -19,7 +19,7 @@ struct ViewControllerWeakContainer {
 
 extension UIViewController {
 
-    func weakContainer() -> ViewControllerWeakContainer {
+    func weakContainer() -> UIViewControllerWeakContainer {
         .init(weakVC: self)
     }
 

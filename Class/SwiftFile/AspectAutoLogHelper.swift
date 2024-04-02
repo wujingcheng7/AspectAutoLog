@@ -31,7 +31,7 @@ public class AspectAutoLogHelper: NSObject {
 
     // MARK: - UIViewController
 
-    private var appearingVCArray: [ViewControllerWeakContainer] = []
+    private var appearingVCArray: [UIViewControllerWeakContainer] = []
 
     public func after_viewControllerDidInit(_ viewController: Any?) {
         guard let viewController = viewController as? UIViewController else { return }
