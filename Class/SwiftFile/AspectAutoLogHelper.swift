@@ -118,7 +118,7 @@ public class AspectAutoLogHelper: NSObject {
     // MARK: - call logger
 
     private func loggersDo(block: (_ logger: AspectAutoLogProtocol.Type) -> Void) {
-        AspectAutoLogExecutor.loggers.forEach({ block($0) })
+        AspectAutoLogExecutor.loggersDo(block: block)
     }
 
 }
