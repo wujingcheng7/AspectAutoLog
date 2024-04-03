@@ -5,7 +5,6 @@
 //  Created by 吴京城 on 2024/3/25.
 //
 
-#import "UIViewController+AspectAutoLog.h"
 #import "NSObject+AspectAutoLog.h"
 #import "AspectAutoLog-Swift.h"
 
