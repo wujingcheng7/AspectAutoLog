@@ -55,9 +55,7 @@ public class AspectAutoLogHelper: NSObject {
         appearingVCArray.removeAll(where: { $0.weakVC == viewController })
     }
 
-    // MARK: - UIControl
-
-    private var aliveControlArray: [UIControlWeakContainer] = []
+    // MARK: - UIView
 
     public func after_viewDidInit(_ view: Any?) {
         aliveControlArray.removeAll(where: { $0.control == nil })
@@ -65,7 +63,27 @@ public class AspectAutoLogHelper: NSObject {
         if let control = view as? UIControl {
             aliveControlArray.append(.init(control: control))
         }
+        if let view = view as? UIScrollView {
+            aliveScrollViews.append(.init(scrollView: view))
+        }
     }
+
+    public func after_viewDidLayoutSubviews(_ view: UIView) {
+        if let view = view as? UIScrollView {
+            aliveScrollViews.first(where: { $0.view == view })?.checkCells()
+        }
+    }
+
+    public func after_viewDidMoveToWindow(_ view: UIView) {
+        if let view = view as? UIScrollView {
+            aliveScrollViews.removeAll(where: { $0.view == nil })
+            aliveScrollViews.first(where: { $0.view == view })?.checkCells()
+        }
+    }
+
+    // MARK: - UIControl
+
+    private var aliveControlArray: [UIControlWeakContainer] = []
 
     public func after_control(_ control: UIControl,
                               didAddTarget target: Any?,
@@ -101,6 +119,14 @@ public class AspectAutoLogHelper: NSObject {
                 )
             }
         }
+    }
+
+    // MARK: - UITableView & UICollectionView
+
+    private var aliveScrollViews: [UIScrollViewWeakContainer] = []
+
+    public func after_viewDidReloadData(_ view: UIScrollView) {
+        aliveScrollViews.first(where: { $0.view == view })?.checkCells()
     }
 
     // MARK: - app enter foreground

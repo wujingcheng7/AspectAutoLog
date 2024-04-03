@@ -40,6 +40,11 @@ public extension AspectAutoLogExtension where Base: UIView {
         set {
             objc_setAssociatedObject(base, &type(of: base).AssociatedKeys.name,
                                      newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            if let base = base as? UITableViewCell {
+                base.aal.cell.name = newValue
+            } else if let base = base as? UICollectionViewCell {
+                base.aal.cell.name = newValue
+            }
         }
     }
 
@@ -54,6 +59,11 @@ public extension AspectAutoLogExtension where Base: UIView {
         set {
             objc_setAssociatedObject(base, &type(of: base).AssociatedKeys.extraParams,
                                      newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            if let base = base as? UITableViewCell {
+                base.aal.cell.extraPrams = newValue
+            } else if let base = base as? UICollectionViewCell {
+                base.aal.cell.extraPrams = newValue
+            }
         }
     }
 

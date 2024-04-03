@@ -8,6 +8,8 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
+@class AspectAutoLogCell;
+
 NS_ASSUME_NONNULL_BEGIN
 
 /// 需要您自己实现这个协议，并且进行注册
@@ -74,6 +76,20 @@ NS_SWIFT_NAME(AspectAutoLogProtocol)
 + (void)logUIControlWillTouchUpInside:(UIControl *)control
                      inViewController:(nullable UIViewController *)viewController
 NS_SWIFT_NAME(logUIControlWillTouchUpInside(control:inViewController:));
+
+/// - Parameters:
+///   - cell: UITableViewCell.aal.cell or UICollectionViewCell.aal.cell
+///   - view: UITableView or UICollectionView
++ (void)logStartDisplayViewCell:(AspectAutoLogCell *)cell
+        inTableOrCollectionView:(UIScrollView *)view
+               inViewController:(nullable UIViewController *)viewController;
+
+/// - Parameters:
+///   - cell: UITableViewCell.aal.cell or UICollectionViewCell.aal.cell
+///   - view: UITableView or UICollectionView
++ (void)logEndDisplayViewCell:(AspectAutoLogCell *)cell
+      inTableOrCollectionView:(UIScrollView *)view
+             inViewController:(nullable UIViewController *)viewController;
 
 @end
 

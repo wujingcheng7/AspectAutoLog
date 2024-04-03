@@ -18,6 +18,10 @@
                                    swizzled:@selector(initWithAalFrame:)];
         [self aal_methodSwizzleWithOriginal:@selector(initWithCoder:)
                                    swizzled:@selector(initWithAalCoder:)];
+        [self aal_methodSwizzleWithOriginal:@selector(didMoveToWindow)
+                                   swizzled:@selector(aal_didMoveToWindow)];
+        [self aal_methodSwizzleWithOriginal:@selector(layoutSubviews)
+                                   swizzled:@selector(aal_layoutSubviews)];
     });
 }
 
@@ -31,6 +35,16 @@
     id res = [self initWithAalCoder:coder];
     [AALAspectAutologHelper.shared after_viewDidInit:res];
     return res;
+}
+
+- (void)aal_layoutSubviews {
+    [self aal_layoutSubviews];
+    [AALAspectAutologHelper.shared after_viewDidLayoutSubviews:self];
+}
+
+- (void)aal_didMoveToWindow {
+    [self aal_didMoveToWindow];
+    [AALAspectAutologHelper.shared after_viewDidMoveToWindow:self];
 }
 
 @end
