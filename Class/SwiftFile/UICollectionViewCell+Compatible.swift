@@ -33,7 +33,7 @@ public extension AspectAutoLogExtension where Base: UICollectionViewCell {
         if let res = objc_getAssociatedObject(base, &type(of: base).AssociatedKeys.cell) as? AspectAutoLogCell {
             return res
         }
-        let res = AspectAutoLogCell(idString: UUID().uuidString)
+        let res = AspectAutoLogCell(idString: UUID().uuidString, cellClass: base.classForCoder)
         objc_setAssociatedObject(base, &type(of: base).AssociatedKeys.cell, res, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         return res
     }

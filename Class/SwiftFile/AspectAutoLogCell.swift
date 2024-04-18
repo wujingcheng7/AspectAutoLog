@@ -10,6 +10,7 @@ import UIKit
 @objcMembers
 public class AspectAutoLogCell: NSObject {
 
+    public let cellClass: AnyClass
     public internal(set) var name: String = ""
     public internal(set) var extraPrams: [String: Any] = [:]
 
@@ -61,13 +62,14 @@ public class AspectAutoLogCell: NSObject {
     @objc(idString)
     public internal(set) var idString: String
 
-    init(idString: String) {
+    init(idString: String, cellClass: AnyClass) {
         self.idString = idString
+        self.cellClass = cellClass
         super.init()
     }
 
     func aalCopy() -> AspectAutoLogCell {
-        let res = AspectAutoLogCell(idString: idString)
+        let res = AspectAutoLogCell(idString: idString, cellClass: cellClass)
         res.name = name
         res.extraPrams = extraPrams
         res.startDisplayTime = startDisplayTime
