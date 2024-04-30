@@ -10,6 +10,7 @@ AspectAutoLog is a library for implementing automatic tracking in iOS projects, 
 - Supports Swift and Objective-C languages
 - Automatic tracking of UIViewController's appearance/disappearance/returning to the foreground
 - Automatic tracking of UIControl's clicks
+- Automatic tracking of (UITableViewCell/UICollectionViewCell)'s display & hide [supports deduplication]
 - Provides commonly used tracking parameters that can be directly accessed and modified via .aal.xxx, ready to use out of the box
 - Tracking parameters include an extraParams property for adding more custom parameters
 
@@ -60,6 +61,33 @@ public class YourCustom: NSObject, AspectAutoLogProtocol {
         // Then use this data to report tracking events to your server
     }
 
+    public static func logStartDisplayViewCell(_ cell: AspectAutoLogCell,
+                                               inTableOrCollectionView view: UIScrollView,
+                                               in viewController: UIViewController?) {
+        let pageName = viewController?.aal.pageNode.name // Page ID
+        let pageExtraParams = viewController?.aal.extraParams // Page parameters
+        let containerExtraParams = view.aal.extraParams // Extra parameters for the container [UITableView/UICollectionView]
+        let cellClass = cell.cellClass // Class of cell
+        let cellName = cell.name // Custom name of the cell
+        let cellExtraParams = cell.extraPrams // Extra parameters of the cell
+        // Then use this data to log events to your server, indicating the start of cell display
+        ...
+    }
+
+    public static func logEndDisplayViewCell(_ cell: AspectAutoLogCell,
+                                             inTableOrCollectionView view: UIScrollView,
+                                             in viewController: UIViewController?) {
+        let pageName = viewController?.aal.pageNode.name // Page ID
+        let pageExtraParams = viewController?.aal.extraParams // Page parameters
+        let containerExtraParams = view.aal.extraParams // Extra parameters for the container [UITableView/UICollectionView]
+        let cellClass = cell.cellClass // Class of cell
+        let cellName = cell.name // Custom name of the cell
+        let cellExtraParams = cell.extraPrams // Extra parameters of the cell
+        let cellDisplayDuration = cell.displayDuration // Duration for which the cell was displayed
+        // Then use this data to log events to your server, indicating the end of cell display
+        ....
+    }
+
 }
 ```
 
@@ -106,6 +134,33 @@ NS_ASSUME_NONNULL_END
     NSDictionary<NSString *, id> *extraParams = control.aal_extraParams; // Other parameters of the button
     UIViewController *page = viewController // Page where the button is located
     // Then use this data to report tracking events to your server
+}
+
++ (void)logStartDisplayViewCell:(AspectAutoLogCell *)cell
+        inTableOrCollectionView:(UIScrollView *)view
+               inViewController:(UIViewController *)viewController {
+    NSString* pageName = viewController.aal_pageNode.name; // Page ID
+    NSDictionary<NSString*, id>* pageExtraParams = viewController.aal_extraParams; // Page parameters
+    NSDictionary<NSString*, id>* containerExtraParams = view.aal_extraParams; // Extra parameters for the container [UITableView/UICollectionView]
+    Class cellClass = cell.cellClass; // Class of cell
+    NSString *cellName = cell.name; // Custom name of the cell
+    NSDictionary<NSString*, id>* cellExtraParams = cell.extraPrams; // Extra parameters of the cell
+    // Then use this data to log events to your server, indicating the start of cell display
+    ...
+}
+
++ (void)logEndDisplayViewCell:(AspectAutoLogCell *)cell
+      inTableOrCollectionView:(UIScrollView *)view
+             inViewController:(UIViewController *)viewController {
+    NSString* pageName = viewController.aal_pageNode.name; // Page ID
+    NSDictionary<NSString*, id>* pageExtraParams = viewController.aal_extraParams; // Page parameters
+    NSDictionary<NSString*, id>* containerExtraParams = view.aal_extraParams; // Extra parameters for the container [UITableView/UICollectionView]
+    Class cellClass = cell.cellClass; // Class of cell
+    NSString *cellName = cell.name; // Custom name of the cell
+    NSDictionary<NSString*, id>* cellExtraParams = cell.extraPrams; // Extra parameters of the cell
+    NSTimeInterval cellDisplayDuration = cell.displayDuration; // Duration for which the cell was displayed
+    // Then use this data to log events to your server, indicating the end of cell display
+    ...
 }
 
 @end
@@ -164,12 +219,18 @@ class SomeViewController: UIViewController {
         // self.present(page, animated: true)
     }
 
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell: UITableViewCell = ....
+        // Set a unique ID for the cell, which can be used to deduplicate Display/EndDisplay events, achieving more advanced and accurate tracking effects
+        // For example, if you are displaying a list of orders using a UITableView, where each UITableViewCell represents an order and they all have an orderId property that is unique
+        // You can simply set the value of aal_cellId using `cell.aal.cellId = "\(orderId)"`, making it simple and effective!
+        let orderId = 0
+        cell.aal.cellId = "\(orderId)"
+        return cell
+    }
+
 }
 ```
-
-## TODO
-- Support the display of views
-- Support more interaction actions (not limited to touchUpInside)
 
 ## Contributing
 
